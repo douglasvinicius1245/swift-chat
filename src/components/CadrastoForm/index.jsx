@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 export default function CadastroForm() {
     const [professores, setProfessores] = useState([]);
@@ -9,28 +9,27 @@ export default function CadastroForm() {
     const [alunoForm, setAlunoForm] = useState({ nome: '', email: '', idade: '', senha: '123' });
     const [turmaForm, setTurmaForm] = useState({ nome: '', anoLetivo: 2026, professorResponsavelId: '', alunosIds: [] });
 
-    const URL_BASE = process.env.URL_BASE || 'http://localhost:3000';
+    const REACT_APP_URL_BASE = process.env.REACT_APP_URL_BASE || 'http://localhost:3000';
 
-    // Carrega dados iniciais para montar os selects da turma
-    useEffect(() => {
-        carregarDados();
-    }, []);
-
-    const carregarDados = async () => {
+    const carregarDados = useCallback(async () => {
         try {
-            const p = await fetch(`${URL_BASE}/professor`).then(r => r.json());
-            const a = await fetch(`${URL_BASE}/alunos`).then(r => r.json());
+            const p = await fetch(`${REACT_APP_URL_BASE}/professor`).then(r => r.json());
+            const a = await fetch(`${REACT_APP_URL_BASE}/alunos`).then(r => r.json());
             setProfessores(Array.isArray(p) ? p : []);
             setAlunos(Array.isArray(a) ? a : []);
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
         }
-    };
+    }, [REACT_APP_URL_BASE]);
+
+    useEffect(() => {
+        carregarDados();
+    }, [carregarDados]);
 
     const handleCriarProfessor = async (e) => {
         e.preventDefault();
         try {
-            await fetch(`${URL_BASE}/professor`, {
+            await fetch(`${REACT_APP_URL_BASE}/professor`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(profForm)
@@ -45,7 +44,7 @@ export default function CadastroForm() {
     const handleCriarAluno = async (e) => {
         e.preventDefault();
         try {
-            await fetch(`${URL_BASE}/alunos`, {
+            await fetch(`${REACT_APP_URL_BASE}/alunos`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(alunoForm)
@@ -60,7 +59,7 @@ export default function CadastroForm() {
     const handleCriarTurma = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`${URL_BASE}/turma`, {
+            const res = await fetch(`${REACT_APP_URL_BASE}/turma`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(turmaForm)

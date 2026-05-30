@@ -7,17 +7,19 @@ export default function ChatApp() {
     const [mensagens, setMensagens] = useState([]);
     const [novoTexto, setNovoTexto] = useState('');
 
-    const URL_BASE = process.env.URL_BASE || 'http://localhost:3000';
+    const REACT_APP_URL_BASE = process.env.REACT_APP_URL_BASE || 'http://localhost:3000';
+    console.log(REACT_APP_URL_BASE);
+    
 
     const buscarSalas = useCallback(async () => {
-        const dados = await fetch(`${URL_BASE}/chats/alunos/${usuarioLogadoId}`).then(r => r.json());
+        const dados = await fetch(`${REACT_APP_URL_BASE}/chats/alunos/${usuarioLogadoId}`).then(r => r.json());
         if (Array.isArray(dados)) setSalas(dados);
-    }, [usuarioLogadoId]);
+    }, [REACT_APP_URL_BASE, usuarioLogadoId]);
 
     const buscarMensagens = useCallback(async (roomId) => {
-        const dados = await fetch(`${URL_BASE}/chats/salas/${roomId}/mensagens`).then(r => r.json());
+        const dados = await fetch(`${REACT_APP_URL_BASE}/chats/salas/${roomId}/mensagens`).then(r => r.json());
         if (Array.isArray(dados)) setMensagens(dados);
-    }, []);
+    }, [REACT_APP_URL_BASE]);
 
     // Busca as salas sempre que o usuário "logar"
     useEffect(() => {
@@ -40,7 +42,7 @@ export default function ChatApp() {
         e.preventDefault();
         if (!novoTexto.trim() || !salaAtiva) return;
 
-        const res = await fetch(`${URL_BASE}/chats/salas/${salaAtiva._id}/mensagens`, {
+        const res = await fetch(`${REACT_APP_URL_BASE}/chats/salas/${salaAtiva._id}/mensagens`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

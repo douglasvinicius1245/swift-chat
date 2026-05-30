@@ -12,10 +12,10 @@ export default function CadastrarUsuario() {
 	const [sucesso, setSucesso] = useState(null);
 	const [loading, setLoading] = useState(false);
 
-    const URL_BASE = process.env.URL_BASE || 'http://localhost:3000';
+    const REACT_APP_URL_BASE = process.env.REACT_APP_URL_BASE || 'http://localhost:3000';
 
     useEffect(() => {
-        fetch(`${URL_BASE}/alunos/6a0a022fca00471bc43fe28f`).then(res => res.json()).then(data => {
+        fetch(`${REACT_APP_URL_BASE}/alunos/6a0a022fca00471bc43fe28f`).then(res => res.json()).then(data => {
             console.log('Dados do aluno:', data);
             setNome(data.nome);
             setEmail(data.email);
@@ -47,7 +47,7 @@ export default function CadastrarUsuario() {
 		setLoading(true);
 		try {
 			// Ajuste a rota conforme seu backend
-			const res = await fetch(`${URL_BASE}/api/usuarios`, {
+			const res = await fetch(`${REACT_APP_URL_BASE}/api/usuarios`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ nome, email, senha, idade, turma }),
