@@ -15,43 +15,59 @@ export default function CadastroForm() {
     }, []);
 
     const carregarDados = async () => {
-        const p = await fetch('http://localhost:3000/professor').then(r => r.json());
-        const a = await fetch('http://localhost:3000/alunos').then(r => r.json());
-        setProfessores(Array.isArray(p) ? p : []);
-        setAlunos(Array.isArray(a) ? a : []);
+        try {
+            const p = await fetch('http://localhost:3000/professor').then(r => r.json());
+            const a = await fetch('http://localhost:3000/alunos').then(r => r.json());
+            setProfessores(Array.isArray(p) ? p : []);
+            setAlunos(Array.isArray(a) ? a : []);
+        } catch (error) {
+            console.error('Erro ao carregar dados:', error);
+        }
     };
 
     const handleCriarProfessor = async (e) => {
         e.preventDefault();
-        await fetch('http://localhost:3000/professor', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(profForm)
-        });
-        alert('Professor Criado!');
-        carregarDados();
+        try {
+            await fetch('http://localhost:3000/professor', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(profForm)
+            });
+            alert('Professor Criado!');
+            carregarDados();
+        } catch (error) {
+            console.error('Erro ao criar professor:', error);
+        }
     };
 
     const handleCriarAluno = async (e) => {
         e.preventDefault();
-        await fetch('http://localhost:3000/alunos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(alunoForm)
-        });
-        alert('Aluno Criado!');
-        carregarDados();
+        try {
+            await fetch('http://localhost:3000/alunos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(alunoForm)
+            });
+            alert('Aluno Criado!');
+            carregarDados();
+        } catch (error) {
+            console.error('Erro ao criar aluno:', error);
+        }
     };
 
     const handleCriarTurma = async (e) => {
         e.preventDefault();
-        const res = await fetch('http://localhost:3000/turma', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(turmaForm)
-        }).then(r => r.json());
-        
-        alert(`Turma criada! Status do chat: ${res.chatAutomatico}`);
+        try {
+            const res = await fetch('http://localhost:3000/turma', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(turmaForm)
+            }).then(r => r.json());
+
+            alert(`Turma criada! Status do chat: ${res.chatAutomatico}`);
+        } catch (error) {
+            console.error('Erro ao criar turma:', error);
+        }
     };
 
     return (
