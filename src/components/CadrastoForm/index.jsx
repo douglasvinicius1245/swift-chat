@@ -9,6 +9,8 @@ export default function CadastroForm() {
     const [alunoForm, setAlunoForm] = useState({ nome: '', email: '', idade: '', senha: '123' });
     const [turmaForm, setTurmaForm] = useState({ nome: '', anoLetivo: 2026, professorResponsavelId: '', alunosIds: [] });
 
+    const URL_BASE = process.env.URL_BASE || 'http://localhost:3000';
+
     // Carrega dados iniciais para montar os selects da turma
     useEffect(() => {
         carregarDados();
@@ -16,8 +18,8 @@ export default function CadastroForm() {
 
     const carregarDados = async () => {
         try {
-            const p = await fetch('http://localhost:3000/professor').then(r => r.json());
-            const a = await fetch('http://localhost:3000/alunos').then(r => r.json());
+            const p = await fetch(`${URL_BASE}/professor`).then(r => r.json());
+            const a = await fetch(`${URL_BASE}/alunos`).then(r => r.json());
             setProfessores(Array.isArray(p) ? p : []);
             setAlunos(Array.isArray(a) ? a : []);
         } catch (error) {
@@ -28,7 +30,7 @@ export default function CadastroForm() {
     const handleCriarProfessor = async (e) => {
         e.preventDefault();
         try {
-            await fetch('http://localhost:3000/professor', {
+            await fetch(`${URL_BASE}/professor`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(profForm)
@@ -43,7 +45,7 @@ export default function CadastroForm() {
     const handleCriarAluno = async (e) => {
         e.preventDefault();
         try {
-            await fetch('http://localhost:3000/alunos', {
+            await fetch(`${URL_BASE}/alunos`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(alunoForm)
@@ -58,7 +60,7 @@ export default function CadastroForm() {
     const handleCriarTurma = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:3000/turma', {
+            const res = await fetch(`${URL_BASE}/turma`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(turmaForm)

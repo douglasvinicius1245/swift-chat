@@ -7,13 +7,15 @@ export default function ChatApp() {
     const [mensagens, setMensagens] = useState([]);
     const [novoTexto, setNovoTexto] = useState('');
 
+    const URL_BASE = process.env.URL_BASE || 'http://localhost:3000';
+
     const buscarSalas = useCallback(async () => {
-        const dados = await fetch(`http://localhost:3000/chats/alunos/${usuarioLogadoId}`).then(r => r.json());
+        const dados = await fetch(`${URL_BASE}/chats/alunos/${usuarioLogadoId}`).then(r => r.json());
         if (Array.isArray(dados)) setSalas(dados);
     }, [usuarioLogadoId]);
 
     const buscarMensagens = useCallback(async (roomId) => {
-        const dados = await fetch(`http://localhost:3000/chats/salas/${roomId}/mensagens`).then(r => r.json());
+        const dados = await fetch(`${URL_BASE}/chats/salas/${roomId}/mensagens`).then(r => r.json());
         if (Array.isArray(dados)) setMensagens(dados);
     }, []);
 
@@ -38,7 +40,7 @@ export default function ChatApp() {
         e.preventDefault();
         if (!novoTexto.trim() || !salaAtiva) return;
 
-        const res = await fetch(`http://localhost:3000/chats/salas/${salaAtiva._id}/mensagens`, {
+        const res = await fetch(`${URL_BASE}/chats/salas/${salaAtiva._id}/mensagens`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
