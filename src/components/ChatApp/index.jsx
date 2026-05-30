@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 export default function ChatApp() {
     const [usuarioLogadoId, setUsuarioLogadoId] = useState(''); // ID do aluno/professor testado
@@ -6,6 +6,16 @@ export default function ChatApp() {
     const [salaAtiva, setSalaAtiva] = useState(null);
     const [mensagens, setMensagens] = useState([]);
     const [novoTexto, setNovoTexto] = useState('');
+
+    const buscarSalas = useCallback(async () => {
+        const dados = await fetch(`http://localhost:3000/chats/alunos/${usuarioLogadoId}`).then(r => r.json());
+        if (Array.isArray(dados)) setSalas(dados);
+    }, [usuarioLogadoId]);
+
+    const buscarMensagens = useCallback(async (roomId) => {
+        const dados = await fetch(`http://localhost:3000/chats/salas/${roomId}/mensagens`).then(r => r.json());
+        if (Array.isArray(dados)) setMensagens(dados);
+    }, []);
 
     // Busca as salas sempre que o usuário "logar"
     useEffect(() => {
@@ -22,17 +32,7 @@ export default function ChatApp() {
             intervalo = setInterval(() => buscarMensagens(salaAtiva._id), 3000);
         }
         return () => clearInterval(intervalo);
-    }, [salaAtiva]);
-
-    const buscarSalas = async () => {
-        const dados = await fetch(`http://localhost:3000/chats/alunos/${usuarioLogadoId}`).then(r => r.json());
-        if (Array.isArray(dados)) setSalas(dados);
-    };
-
-    const buscarMensagens = async (roomId) => {
-        const dados = await fetch(`http://localhost:3000/chats/salas/${roomId}/mensagens`).then(r => r.json());
-        if (Array.isArray(dados)) setMensagens(dados);
-    };
+    }, [salaAtiva, buscarMensagens]);
 
     const handleEnviarMensagem = async (e) => {
         e.preventDefault();
