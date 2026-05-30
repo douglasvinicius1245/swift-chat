@@ -12,7 +12,7 @@ export default function ChatApp() {
         if (usuarioLogadoId) {
             buscarSalas();
         }
-    }, [usuarioLogadoId]);
+    }, [usuarioLogadoId, buscarSalas]);
 
     // Polling: Atualiza as mensagens a cada 3 segundos se houver chat aberto
     useEffect(() => {
